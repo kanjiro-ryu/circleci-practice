@@ -1,7 +1,7 @@
 version: 2
 jobs:
   test:
-    docker:　
+    docker:
       - image: circleci/python:3.6.4 # 仮想環境を定義、dockerが使われることがほとんど
     steps:
       - checkout # コードをレポジトリからチェックアウト
