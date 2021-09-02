@@ -21,7 +21,7 @@ jobs:
   #     - run:
   #         command: nosetests tests/math-test.py
 
-  workflows:
-    test_workflow:
-      jobs:
-        - test
+workflows:
+  test_workflow:
+    jobs:
+      - test
