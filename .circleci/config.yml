@@ -34,7 +34,7 @@ jobs:
         working_directory: react_app
         command: yarn install 
      - run:
-        working_directory: ~python-ci/react_app
+        working_directory: react_app
         command: yarn start 
 
   # build:
