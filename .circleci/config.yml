@@ -1,14 +1,41 @@
 version: 2.1
-jobs:
-  test:
+executors:
+  test-executor:
     docker:
       - image: circleci/python:3.6.4 # 仮想環境を定義、dockerが使われることがほとんど
+    environment:
+      - test_dir: tests/
+  front-executor:
+    docker:
+      - image: circleci/node@2.0.2 # 仮想環境を定義、dockerが使われることがほとんど
+jobs:
+  test_by_nosetest:
+    executor: test-executor
     steps:
       - checkout # コードをレポジトリからチェックアウト
       - run:
           command: sudo pip install -r requirements.txt
       - run:
-          command: nosetests tests/math-test.py
+          command: nosetests $test_dir/math-test.py
+  test_by_pytest:
+    executor: test-executor
+    steps:
+      - checkout # コードをレポジトリからチェックアウト
+      - run:
+          command: sudo pip install -r requirements.txt
+      - run:
+          command: pytest $test_dir/test_math.py
+  
+  build_frontend:
+    executor: front-executor
+    steps:
+     - checkout
+     - run:
+        working_directory: front
+        command: yarn install 
+     - run:
+        working_directory: react_app
+        command: yarn start 
 
   # build:
   #   working_directoyr: ~/python-ci 
@@ -24,4 +51,5 @@ jobs:
 workflows:
   test_workflow:
     jobs:
-      - test
+      - test_by_nosetest
+      - test_by_pytest
