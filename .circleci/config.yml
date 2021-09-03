@@ -31,10 +31,10 @@ jobs:
     steps:
      - checkout
      - run:
-        working_directory: react_app
+        working_directory: ~/python-ci/front/react_app
         command: yarn install 
      - run:
-        working_directory: react_app
+        working_directory: ~/python-ci/front/react_app
         command: yarn start 
 
   # build:
