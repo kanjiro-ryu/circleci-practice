@@ -30,10 +30,10 @@ jobs:
     steps:
      - checkout
      - run:
-        working_directory: front
+        # working_directory: front
         command: yarn install 
      - run:
-        working_directory: front
+        # working_directory: front
         command: yarn start 
 
   # build:
@@ -50,6 +50,6 @@ jobs:
 workflows:
   test_workflow:
     jobs:
-      - test_by_nosetest
-      - test_by_pytest
+      # - test_by_nosetest
+      # - test_by_pytest
       - build_frontend
