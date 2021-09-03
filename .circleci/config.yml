@@ -31,11 +31,11 @@ jobs:
     steps:
      - checkout
      - run:
-        working_directory: react_app
         command: yarn install 
-     - run:
         working_directory: react_app
+     - run:
         command: yarn build 
+        working_directory: react_app
 
   # build:
   #   working_directoyr: ~/python-ci 
