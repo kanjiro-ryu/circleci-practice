@@ -5,6 +5,9 @@ executors:
       - image: circleci/python:3.6.4 # 仮想環境を定義、dockerが使われることがほとんど
     environment:
       - test_dir: tests/
+  front-executor:
+    docker:
+      - image: circleci/node
 jobs:
   test_by_nosetest:
     executor: test-executor
@@ -24,14 +27,11 @@ jobs:
           command: pytest $test_dir/test_math.py
   
   build_frontend:
+    executor: front-executor
     steps:
      - checkout
-     - run:
-        working_directory: front
-        command: yarn install 
-     - run:
-        working_directory: front/react_app
-        command: yarn start 
+     - run: yarn install 
+     - run: yarn start 
 
   # build:
   #   working_directoyr: ~/python-ci 
@@ -49,3 +49,4 @@ workflows:
     jobs:
       - test_by_nosetest
       - test_by_pytest
+      - build_frontend
