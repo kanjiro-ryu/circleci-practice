@@ -24,13 +24,14 @@ jobs:
       - run:
           command: sudo pip install -r requirements.txt
       - run:
-          command: pytest -m $test_dir/test_math.py
+         working_directory: front/react_app
+         command: pytest -m $test_dir/test_math.py
   build_frontend:
     executor: front-executor
     steps:
      - checkout
      - run:
-        working_directory: front/react_app
+        working_directory: react_app
         command: yarn install 
      - run:
         working_directory: react_app
