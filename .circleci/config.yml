@@ -31,10 +31,10 @@ jobs:
     steps:
      - checkout
      - run:
-        command: yarn install 
+        command: yarn run install 
         working_directory: react_app
      - run:
-        command: yarn build 
+        command: yarn run build 
         working_directory: react_app
 
   # build:
