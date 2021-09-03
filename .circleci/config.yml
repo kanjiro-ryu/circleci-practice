@@ -24,7 +24,7 @@ jobs:
       - run:
           command: sudo pip install -r requirements.txt
       - run:
-          command: pytest tests/test_math.py
+          command: pytest -m $test_dir/test_math.py
   build_frontend:
     executor: front-executor
     steps:
