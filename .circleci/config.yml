@@ -33,7 +33,7 @@ jobs:
         working_directory: front
         command: yarn install 
      - run:
-        working_directory: front/react_app
+        working_directory: front
         command: yarn start 
 
   # build:
