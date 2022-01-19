@@ -6,6 +6,15 @@ jobs:
       - image: circleci/python:3.6.4
     steps:
       - checkout
+  test_setup:
+  working_directoyr: ~/circleci-practice
+    docker:
+      - image: circleci/python:3.6.4
+    steps:
+      - checkout
+      - run:
+          command: sudo pip install -r requirements.txt
+
   nosetest:
     working_directoyr: ~/circleci-practice
     docker:
@@ -29,5 +38,6 @@ workflows:
   # 実行するジョブを登録
     jobs:
       - build
+      - test_setup
       - nosetest
       - pytest
