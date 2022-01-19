@@ -1,12 +1,12 @@
 version: 2.1
-
-
+# executor定義
 executors:
   backend-executer:
     docker:
       - image: circleci/python:3.6.4
-
+# commands定義
 commands:
+  # キャッシュ復元
   restore_python_package:
     steps:
       - restore_cache:
@@ -14,22 +14,25 @@ commands:
           keys: 
             - deps-back-{{ .Branch }}-{{ checksum "requirements.txt" }}
             - deps-back-
+  # キャッシュ保存
   save_python_package:
     steps: 
       - save_cache: # ** 依存関係キャッシュを保存する特別なステップ **
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
             - "~/circleci-practice/src/__pycache__"
-  pip install:
+  # 依存関係を取得
+  pip_install:
     steps:
       - run:
           command: pip3 install -r requirements.txt
+  # 検証1
   nosetest:
     steps:
       - run:
           command: nosetests tests/math-test.py
+  # 検証2
   pytest:
-    working_directoyr: ~/circleci-practice/tests
     steps:
       - run:
           command: pytest
@@ -40,8 +43,7 @@ jobs:
     executor: backend-executer
     steps:
     - checkout
-    - run: sudo chown -R circleci:circleci /usr/local/bin
-    - run: sudo chown -R circleci:circleci /usr/local/lib/python3.9/site-packages
+    # - run: sudo chown -R circleci:circleci /usr/local/bin
     - restore_python_package
     - pip_install
     - save_python_package
@@ -54,10 +56,3 @@ workflows:
   # 実行するジョブを登録
     jobs:
       - backend_build
-      - pip_install
-      - nosetest:
-          requires:
-            - pip_install
-      - pytest:
-          requires:
-            - pip_install
