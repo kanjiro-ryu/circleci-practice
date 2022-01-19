@@ -15,6 +15,7 @@ commands:
             - deps-back-{{ .Branch }}-{{ checksum "requirements.txt" }}
             - deps-back-
   save_python_package:
+    steps: 
       - save_cache: # ** 依存関係キャッシュを保存する特別なステップ **
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
@@ -22,7 +23,7 @@ commands:
   pip install:
     steps:
       - run:
-          command: sudo pip install -r requirements.txt
+          command: pip3 install -r requirements.txt
   nosetest:
     steps:
       - run:
@@ -49,7 +50,6 @@ jobs:
   
 # ワークフロー定義
 workflows:
-  version: 2.1
   backend-test:
   # 実行するジョブを登録
     jobs:
