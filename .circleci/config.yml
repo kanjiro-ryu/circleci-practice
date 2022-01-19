@@ -38,5 +38,12 @@ workflows:
     jobs:
       - build
       - test_setup
+          # 依存関係を定義 
+          requires:
+            - build
       - nosetest
+          requires:
+            - test_setup
       - pytest
+          requires:
+            - test_setup
