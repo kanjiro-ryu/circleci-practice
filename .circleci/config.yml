@@ -12,6 +12,11 @@ jobs:
       - image: circleci/python:3.6.4
     steps:
       - checkout
+      - restore_cache:
+          name: Restore Python package
+          keys: 
+            - deps-back-{{ .Branch }}-{{ checksum "requirements.txt" }}
+            - deps-back-
       - run:
           command: sudo pip install -r requirements.txt
       - save_cache: # ** 依存関係キャッシュを保存する特別なステップ **
@@ -24,10 +29,12 @@ jobs:
       - image: circleci/python:3.6.4
     steps:
       - checkout
-      - restore_cache: # ** 依存関係キャッシュを保存する特別なステップ **
-          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+      - save_cache:
+          name: Save python package
+          key: deps-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
-            - "~/circleci-practice/src/__pycache__"
+            - /usr/local/bin
+            - /usr/local/lib/python3.10/site-packages
       # - run:
       #     command: sudo pip install -r requirements.txt
       - run:
