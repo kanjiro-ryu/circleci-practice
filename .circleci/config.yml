@@ -1,68 +1,63 @@
-# job定義
-jobs:
-  build:
-    working_directoyr: ~/circleci-practice
+version: 2.1
+
+
+executors:
+  backend-executer:
     docker:
       - image: circleci/python:3.6.4
+
+commands:
+  restore_python_package:
     steps:
-      - checkout
-  test_setup:
-    working_directoyr: ~/circleci-practice
-    docker:
-      - image: circleci/python:3.6.4
-    steps:
-      - checkout
       - restore_cache:
           name: Restore Python package
           keys: 
             - deps-back-{{ .Branch }}-{{ checksum "requirements.txt" }}
             - deps-back-
-      - run:
-          command: sudo pip install -r requirements.txt
+  save_python_package:
       - save_cache: # ** 依存関係キャッシュを保存する特別なステップ **
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
             - "~/circleci-practice/src/__pycache__"
-  nosetest:
-    working_directoyr: ~/circleci-practice
-    docker:
-      - image: circleci/python:3.6.4
+  pip install:
     steps:
-      - checkout
-      - save_cache:
-          name: Save python package
-          key: deps-{{ .Branch }}-{{ checksum "requirements.txt" }}
-          paths:
-            - /usr/local/bin
-            - /usr/local/lib/python3.10/site-packages
-      # - run:
-      #     command: sudo pip install -r requirements.txt
+      - run:
+          command: sudo pip install -r requirements.txt
+  nosetest:
+    steps:
       - run:
           command: nosetests tests/math-test.py
   pytest:
     working_directoyr: ~/circleci-practice/tests
-    docker:
-      - image: circleci/python:3.6.4
     steps:
-      - checkout
-      # - run:
-      #     command: sudo pip install -r requirements.txt
       - run:
           command: pytest
+
+# job定義
+jobs:
+  backend_build:
+    executor: backend-executer
+    steps:
+    - checkout
+    - run: sudo chown -R circleci:circleci /usr/local/bin
+    - run: sudo chown -R circleci:circleci /usr/local/lib/python3.9/site-packages
+    - restore_python_package
+    - pip_install
+    - save_python_package
+    - nosetest
+    - pytest
+  
 # ワークフロー定義
 workflows:
-  version: 2
-  build_and_test:
+  version: 2.1
+  backend-test:
   # 実行するジョブを登録
     jobs:
-      - build
-      - test_setup:
-          # 依存関係を定義 
-          requires:
-            - build
+      - backend_build
+      - pip_install
       - nosetest:
           requires:
-            - test_setup
+            - pip_install
       - pytest:
           requires:
-            - test_setup
+            - pip_install
