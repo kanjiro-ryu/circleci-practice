@@ -1,4 +1,4 @@
-version: 2
+# job定義
 jobs:
   build:
     working_directoyr: ~/circleci-practice
@@ -22,3 +22,12 @@ jobs:
       - checkout
       - run:
           command: pytest
+# ワークフロー定義
+workflows:
+  version: 2
+  build_and_test:
+  # 実行するジョブを登録
+    jobs:
+      - build
+      - nosetest
+      - pytest
