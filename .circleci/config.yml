@@ -25,7 +25,7 @@ commands:
   pip_install:
     steps:
       - run:
-          command: pip3 install -r requirements.txt
+          command: sudo pip install -r requirements.txt
   # 検証1
   nosetest:
     steps:
@@ -43,7 +43,6 @@ jobs:
     executor: backend-executer
     steps:
     - checkout
-    # - run: sudo chown -R circleci:circleci /usr/local/bin
     - restore_python_package
     - pip_install
     - save_python_package
