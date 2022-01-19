@@ -37,13 +37,13 @@ workflows:
   # 実行するジョブを登録
     jobs:
       - build
-      - test_setup
+      - test_setup:
           # 依存関係を定義 
           requires:
             - build
-      - nosetest
+      - nosetest:
           requires:
             - test_setup
-      - pytest
+      - pytest:
           requires:
             - test_setup
