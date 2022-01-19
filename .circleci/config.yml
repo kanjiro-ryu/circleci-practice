@@ -1,52 +1,57 @@
 version: 2.1
+# executor定義
 executors:
-  test-executor:
+  backend-executer:
     docker:
-      - image: circleci/python:3.6.4 # 仮想環境を定義、dockerが使われることがほとんど
-    environment:
-      - test_dir: tests/
-  front-executor:
-    docker:
-      - image: circleci/node
+      - image: circleci/python:3.6.4
+# commands定義
+commands:
+  # キャッシュ復元
+  restore_python_package:
+    steps:
+      - restore_cache:
+          name: Restore Python package
+          keys: 
+            - deps-back-{{ .Branch }}-{{ checksum "requirements.txt" }}
+            - deps-back-
+  # キャッシュ保存
+  save_python_package:
+    steps: 
+      - save_cache: # ** 依存関係キャッシュを保存する特別なステップ **
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - "~/circleci-practice/src/__pycache__"
+  # 依存関係を取得
+  pip_install:
+    steps:
+      - run:
+          command: sudo pip install -r requirements.txt
+  # 検証1
+  nosetest:
+    steps:
+      - run:
+          command: nosetests tests/math-test.py
+  # 検証2
+  pytest:
+    steps:
+      - run:
+          command: pytest
+
+# job定義
 jobs:
-  test_by_nosetest:
-    executor: test-executor
+  backend_build:
+    executor: backend-executer
     steps:
-      - checkout # コードをレポジトリからチェックアウト
-      - run:
-          command: sudo pip install -r requirements.txt
-      - run:
-          command: nosetests $test_dir/math-test.py
-  test_by_pytest:
-    executor: test-executor
-    steps:
-      - checkout # コードをレポジトリからチェックアウト
-      - run:
-          command: sudo pip install -r requirements.txt
-      - run:
-          command: pytest $test_dir/test_math.py
+    - checkout
+    - restore_python_package
+    - pip_install
+    - save_python_package
+    - nosetest
+    - pytest
   
-  build_frontend:
-    executor: front-executor
-    steps:
-     - checkout
-     - run: yarn install 
-     - run: yarn start 
-
-  # build:
-  #   working_directoyr: ~/python-ci 
-  #   docker:　
-  #     - image: circleci/python:3.6.4 # 仮想環境を定義、dockerが使われることがほとんど
-  #   steps:
-  #     - checkout # コードをレポジトリからチェックアウト
-  #     - run:
-  #         command: sudo pip install -r requirements.txt
-  #     - run:
-  #         command: nosetests tests/math-test.py
-
+# ワークフロー定義
 workflows:
-  test_workflow:
+  backend-test:
+  # 実行するジョブを登録
     jobs:
-      - test_by_nosetest
-      - test_by_pytest
-      - build_frontend
+      - backend_build
