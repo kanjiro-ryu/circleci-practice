@@ -18,7 +18,7 @@ commands:
       - save_cache: # ** 依存関係キャッシュを保存する特別なステップ **
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
-            - "/usr/local/bin/python"
+            - "c:\users\pucho\appdata\local\programs\python\python310\lib\site-packages"
   # 依存関係を取得
   pip_install:
     steps:
