@@ -13,14 +13,14 @@ commands:
           name: Restore Python package
           keys: 
             - deps-back-{{ .Branch }}-{{ checksum "requirements.txt" }}
-            - deps-back-
+            # - deps-back-
   # キャッシュ保存
   save_python_package:
     steps: 
       - save_cache: # ** 依存関係キャッシュを保存する特別なステップ **
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
-          paths:
-            - "~/circleci-practice/src/__pycache__"
+          # paths:
+          #   - "~/circleci-practice/src/__pycache__"
   # 依存関係を取得
   pip_install:
     steps:
