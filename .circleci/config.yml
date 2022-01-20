@@ -11,9 +11,7 @@ commands:
     steps:
       - restore_cache:
           name: Restore Python package
-          keys: 
-            - deps-back-{{ .Branch }}-{{ checksum "requirements.txt" }}
-            # - deps-back-
+          key: deps-back-{{ .Branch }}-{{ checksum "requirements.txt" }}
   # キャッシュ保存
   save_python_package:
     steps: 
@@ -26,6 +24,10 @@ commands:
     steps:
       - run:
           command: sudo pip install -r requirements.txt
+      -run:
+          command: which python
+      - run:
+          command: ls -alh
   # 検証1
   nosetest:
     steps:
