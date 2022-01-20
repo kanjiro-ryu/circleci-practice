@@ -23,11 +23,16 @@ commands:
   pip_install:
     steps:
       - run:
-          command: sudo pip install -r requirements.txt
+          command: ls
+      - run:
+          command: pip list
+      - run:
+          command: pip show pytest
       - run:
           command: which python
       - run:
-          command: which pip
+          command: sudo pip install -r requirements.txt
+      
   # 検証1
   nosetest:
     steps:
