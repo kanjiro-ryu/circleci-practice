@@ -11,14 +11,14 @@ commands:
     steps:
       - restore_cache:
           name: Restore Python package
-          key: test-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          key: tes-{{ .Branch }}-{{ checksum "requirements.txt" }}
   # キャッシュ保存
   save_python_package:
     steps: 
       - save_cache: # ** 依存関係キャッシュを保存する特別なステップ **
-          key: test-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          key: tes-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
-            - "~/circleci-practice/src/__pycache__"
+            - "/usr/local/lib/python3.6/site-packages"
   # 依存関係を取得
   pip_install:
     steps:
@@ -27,11 +27,11 @@ commands:
       - run:
           command: pip list
       - run:
-          command: pip show pytest
-      - run:
           command: which python
       - run:
           command: sudo pip install -r requirements.txt
+      - run:
+          command: pip show pytest
       
   # 検証1
   nosetest:
@@ -62,5 +62,3 @@ workflows:
   # 実行するジョブを登録
     jobs:
       - backend_build
-
-
