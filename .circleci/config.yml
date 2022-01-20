@@ -19,8 +19,8 @@ commands:
     steps: 
       - save_cache: # ** 依存関係キャッシュを保存する特別なステップ **
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
-          # paths:
-          #   - "~/circleci-practice/src/__pycache__"
+          paths:
+            - ""
   # 依存関係を取得
   pip_install:
     steps:
