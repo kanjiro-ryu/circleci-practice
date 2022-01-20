@@ -11,12 +11,12 @@ commands:
     steps:
       - restore_cache:
           name: Restore Python package
-          key: deps-back-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          key: test-{{ .Branch }}-{{ checksum "requirements.txt" }}
   # キャッシュ保存
   save_python_package:
     steps: 
       - save_cache: # ** 依存関係キャッシュを保存する特別なステップ **
-          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          key: test-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
             - "~/circleci-practice/src/__pycache__"
   # 依存関係を取得
