@@ -24,24 +24,28 @@ commands:
   # 依存関係を取得
   pip_install:
     steps:
-      # - checkout # プロジェクトのソースコードをworking_directoryで指定されたパスにチェックアウト
-      # - restore_cache:
-      #     key: deps9-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
           name: install dependencies
           command: | # 仮想環境作成, 仮想環境をアクティベート, pip install
             python3 -m venv .venv
             source .venv/bin/activate
             pip install -r requirements.txt
-      # - save_cache: # 仮想環境とインストールされたパッケージをキャッシュする
-      #     key: deps9-{{ .Branch }}-{{ checksum "requirements.txt" }}
-      #     paths:
-      #       - ".venv" # キャッシュ先のPATH
       - run:
           name: run test
           command: |
             source .venv/bin/activate
             pytest tests
+      - run:
+          name: test working_directory1
+          working_directory: src
+          command: |
+            ls
+            python sample.py
+      - run:
+          name: test working_directory2
+          command: |
+            ls
+            python sample.py
 
       
       
